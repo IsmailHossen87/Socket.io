@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Socket.IO Real-time List</title>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 50px;
+      }
+      input {
+        padding: 8px;
+      }
+      button {
+        padding: 8px 12px;
+        margin-left: 5px;
+      }
+      ul {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>🧩 Real-time Add to List</h2>
+
+    <input id="itemInput" placeholder="Enter something..." />
+    <button id="addBtn">Add</button>
+
+    <ul id="itemList"></ul>
+
+    <script>
+      const socket = io();
+
+      const input = document.getElementById("itemInput");
+      const button = document.getElementById("addBtn");
+      const list = document.getElementById("itemList");
+
+      button.addEventListener("click", () => {
+        const value = input.value.trim();
+        if (value) {
+          socket.emit("newItem", value);
+          input.value = "";
+        }
+      });
+
+      socket.on("newItem", (data) => {
+        const li = document.createElement("li");
+        li.textContent = data;
+        list.appendChild(li);
+      });
+    </script>
+  </body>
+</html>
